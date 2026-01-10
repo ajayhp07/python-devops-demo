@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Python DevOps Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      color: #fff;
+      text-align: center;
+      padding-top: 80px;
+    }
+    .card {
+      background: rgba(0,0,0,0.3);
+      padding: 40px;
+      border-radius: 15px;
+      display: inline-block;
+    }
+    h1 { color: #ffd700; }
+    p { font-size: 1.1rem; }
+    .badge {
+      margin-top: 15px;
+      display: inline-block;
+      background: #28a745;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>🚀 Python DevOps Demo</h1>
+    <p>Containerized Flask Application</p>
+
+    <p><strong>Hostname:</strong> {{ hostname }}</p>
+    <p><strong>Server Time:</strong> {{ time }}</p>
+
+    <div class="badge">Healthy ✅</div>
+  </div>
+
+</body>
+</html>

@@ -1,1 +1,3 @@
-flask
+Flask
+pytest
+prometheus_client
