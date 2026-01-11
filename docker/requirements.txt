@@ -5,5 +5,4 @@ mypy                 # Static type checking (NOT runtime)
 bandit               # Security scan (code-level vulnerabilities)
 pytest               # Unit testing framework
 safety               # Dependency security scan (known CVEs)
-sonar-scanner        # SonarQube ko analysis report bhejne ke liye
 prometheus_client    # Application monitoring (metrics expose karne ke liye)
