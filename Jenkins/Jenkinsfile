@@ -1,0 +1,72 @@
+
+pipeline
+{
+    agent any
+    stages{
+        stage("Checkout")
+        {
+               script{
+                    try{
+                        git 'https://github.com/ajayhp07/python-devops-demo.git'
+                    }
+                    catch(Exception e1){
+                        mail bcc: '', body: 'download failed from git', cc: '', from: '', replyTo: '', subject: 'CI failed ', to: 'thej.devops@gmail.com'
+                    }
+                }
+            
+        }
+        stage("build")
+        {
+               script{
+                    try{
+                        sh'pip install -r requirements.txt'
+                    }
+                    catch(Exception e1){
+                        mail bcc: '', body: 'download failed from git', cc: '', from: '', replyTo: '', subject: 'CI failed ', to: 'thej.devops@gmail.com'
+                    }
+                }
+            
+        }
+        stage("Checkout")
+        {
+               script{
+                    try{
+                        git clone 'https://github.com/ajayhp07/python-devops-demo.git'
+                    }
+                    catch(Exception e1){
+                        mail bcc: '', body: 'download failed from git', cc: '', from: '', replyTo: '', subject: 'CI failed ', to: 'thej.devops@gmail.com'
+                    }
+                }
+            
+        }
+        stage("Checkout")
+        {
+               script{
+                    try{
+                        git clone 'https://github.com/ajayhp07/python-devops-demo.git'
+                    }
+                    catch(Exception e1){
+                        mail bcc: '', body: 'download failed from git', cc: '', from: '', replyTo: '', subject: 'CI failed ', to: 'thej.devops@gmail.com'
+                    }
+                }
+            
+        }
+        stage("Checkout")
+        {
+               script{
+                    try{
+                        git clone 'https://github.com/ajayhp07/python-devops-demo.git'
+                    }
+                    catch(Exception e1){
+                        mail bcc: '', body: 'download failed from git', cc: '', from: '', replyTo: '', subject: 'CI failed ', to: 'thej.devops@gmail.com'
+                    }
+                }
+            
+        }
+        }
+    }
+
+}
+
+
+

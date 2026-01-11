@@ -1,3 +1,9 @@
-Flask
-pytest
-prometheus_client
+flask                # Web application run karne ke liye
+flake8               # Code style & syntax check (static analysis)
+pylint               # Code quality & maintainability analysis
+mypy                 # Static type checking (NOT runtime)
+bandit               # Security scan (code-level vulnerabilities)
+pytest               # Unit testing framework
+safety               # Dependency security scan (known CVEs)
+sonar-scanner        # SonarQube ko analysis report bhejne ke liye
+prometheus_client    # Application monitoring (metrics expose karne ke liye)
