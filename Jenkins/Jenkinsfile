@@ -1,7 +1,6 @@
 pipeline {
     agent any
     triggers {
-        // Ye line GitHub se aane wale signals (Webhooks) ko catch karti hai
         githubPush()
     }
     
@@ -98,5 +97,6 @@ EOF
 }
     }
 }
+
 
 
