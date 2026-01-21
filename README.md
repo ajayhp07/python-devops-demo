@@ -115,6 +115,11 @@ We monitor the entire infrastructure to ensure 99.9% uptime.
 ```
 
 ---
+Automation Trigger Logic:
+
+Primary Method: Configured GitHub Webhooks for instant "Push-based" triggers, ensuring zero delay between code commit and deployment.
+
+Fallback Method: Implemented Poll SCM (H/2 * * * *) for environments where Jenkins is behind a private firewall, allowing the server to pull updates every 2 minutes.
 
 ## 🛡️ 7. Key Learning & Troubleshooting
 
@@ -129,7 +134,3 @@ We monitor the entire infrastructure to ensure 99.9% uptime.
 **Project Goal:** To demonstrate mastery in CI/CD, K8s Networking, and Automated Cloud Infrastructure. ✅
 
 ---
-
-**Bhai, ye README aapke project ko kisi "Senior Engineer" ke level par le jayega.**
-
-**Next Step:** Ise GitHub par push kardo aur LinkedIn par post karne ki taiyari karo! Kya main aapke liye **GitHub repository ka description** (wo jo chota sa box hota hai right side mein) likh doon?
