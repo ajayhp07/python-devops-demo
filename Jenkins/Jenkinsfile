@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage("2. Naya Image Build Karo") {
+        stage("Image Build ") {
             steps {
                 // Fix: Path pointing to your 'docker/' folder
                 sh "docker build -t ${DOCKER_IMAGE} ./docker"
@@ -94,3 +94,4 @@ EOF
 }
     }
 }
+
