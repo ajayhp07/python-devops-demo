@@ -1,0 +1,96 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE = "python-devops-demo"
+        DOCKERHUB_CREDS = 'dockerhub-creds'
+        SONAR_SERVER = 'sonar-server'
+        INSTANCE_B_IP = "65.1.109.167"
+    }
+    
+    stages {
+        stage("1. Checkout") {
+            steps {
+                git branch: 'main', url: "https://github.com/ajayhp07/python-devops-demo.git" 
+            }
+        }
+
+        stage("2. Naya Image Build Karo") {
+            steps {
+                // Fix: Path pointing to your 'docker/' folder
+                sh "docker build -t ${DOCKER_IMAGE} ./docker"
+            }
+        }
+
+        stage("3. Containerized Testing") {
+            steps {
+                script {
+                    sh "docker run --rm -e PYTHONPATH=/app ${DOCKER_IMAGE} pytest tests/test_app.py"
+                    sh "docker run --rm ${DOCKER_IMAGE} pylint app.py || true"
+                    sh "docker run --rm ${DOCKER_IMAGE} bandit -r . || true"
+                }
+            }
+        }
+
+        stage("4. SonarQube Analysis") {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner' 
+                    withSonarQubeEnv("${SONAR_SERVER}") { 
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-devops-demo"
+                    }
+                }
+            }
+        }
+
+        stage("5. Push to DockerHub") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDS}", passwordVariable: "dockerHubPass", usernameVariable: "dockerHubUser")]) {
+                    sh "echo ${dockerHubPass} | docker login -u ${dockerHubUser} --password-stdin"
+                    sh "docker tag ${DOCKER_IMAGE} ${dockerHubUser}/${DOCKER_IMAGE}:latest"
+                    sh "docker push ${dockerHubUser}/${DOCKER_IMAGE}:latest"
+                }
+            }
+        }
+
+       stage("6. Infrastructure & Monitoring Recovery") {
+    steps {
+        // Zaroori Fix: Sab kuch sshagent ke andar hona chahiye
+        sshagent(['k8s_auth']) {
+            
+            // 1. File bhejo (Ab ye permission error nahi dega kyunki agent active hai)
+            sh "scp -o StrictHostKeyChecking=no monitoring/prometheus.yaml ubuntu@${INSTANCE_B_IP}:/home/ubuntu/prometheus.yaml"
+            
+            // 2. SSH karke baaki command chalao
+            sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@${INSTANCE_B_IP} << 'EOF'
+                    # Docker check & Permissions
+                    sudo systemctl start docker
+                    sudo chmod 666 /var/run/docker.sock
+
+                    # Monitoring Refresh (Fresh configuration ke saath)
+                    docker rm -f prometheus blackbox_exporter node-exporter 2>/dev/null || true
+                    
+                    docker run -d --name node-exporter --restart always -p 9100:9100 prom/node-exporter
+                    docker run -d --name blackbox_exporter --restart always -p 9115:9115 prom/blackbox-exporter
+                    
+                    # .yaml mapping fix
+                    docker run -d --name prometheus --restart always -p 9090:9090 \
+                        -v /home/ubuntu/prometheus.yaml:/etc/prometheus/prometheus.yml prom/prometheus
+
+                    # Deploy & Tunnel
+                    kubectl apply -f https://raw.githubusercontent.com/ajayhp07/python-devops-demo/main/k8s/deployment.yml
+                    kubectl apply -f https://raw.githubusercontent.com/ajayhp07/python-devops-demo/main/k8s/service.yaml
+                    
+                    sudo fuser -k 30007/tcp || true
+                    export JENKINS_NODE_COOKIE=dontKillMe
+                    nohup sudo -E kubectl port-forward --address 0.0.0.0 service/python-app-service 30007:80 > /tmp/k8s_forward.log 2>&1 &
+                    
+                    echo "✅ Automation Success!"
+EOF
+            '''
+        }
+    }
+}
+    }
+}
