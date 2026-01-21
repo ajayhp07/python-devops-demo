@@ -58,13 +58,13 @@ pipeline {
 
        stage("6. Infrastructure & Monitoring Recovery") {
     steps {
-        // Zaroori Fix: Sab kuch sshagent ke andar hona chahiye
+        // ssh-key 
         sshagent(['k8s_auth']) {
             
-            // 1. File bhejo (Ab ye permission error nahi dega kyunki agent active hai)
+            // secured copy
             sh "scp -o StrictHostKeyChecking=no monitoring/prometheus.yaml ubuntu@${INSTANCE_B_IP}:/home/ubuntu/prometheus.yaml"
             
-            // 2. SSH karke baaki command chalao
+            // all this command will run inside the ssh 
             sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@${INSTANCE_B_IP} << 'EOF'
                     # Docker check & Permissions
@@ -97,6 +97,7 @@ EOF
 }
     }
 }
+
 
 
 
