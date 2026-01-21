@@ -131,6 +131,6 @@ Fallback Method: Implemented Poll SCM (H/2 * * * *) for environments where Jenki
 
 **Maintained by:** Ajay Patel
 
-**Project Goal:** To demonstrate mastery in CI/CD, K8s Networking, and Automated Cloud Infrastructure. ✅
+**Project Goal:** To demonstrate mastery in CI/CD, K8s Networking, and Automated Cloud Infrastructure. 
 
 ---
