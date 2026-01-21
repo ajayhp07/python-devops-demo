@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    triggers {
+        // Ye line GitHub se aane wale signals (Webhooks) ko catch karti hai
+        githubPush()
+    }
     
     environment {
         DOCKER_IMAGE = "python-devops-demo"
@@ -94,4 +98,5 @@ EOF
 }
     }
 }
+
 
